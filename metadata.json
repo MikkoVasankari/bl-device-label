@@ -1,0 +1,7 @@
+{
+  "uuid": "bl-device-label@example.com",
+  "name": "Bluetooth device Label",
+  "description": "Displays currently connected Bluetooth device on the top bar",
+  "shell-version": ["45", "44", "43", "42"],
+  "version": 1
+}
