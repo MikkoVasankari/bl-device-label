@@ -51,6 +51,11 @@ class BluetoothExtension {
       return GLib.SOURCE_REMOVE;
     });
 
+    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+      this.getConnectedBluetoothDevices();
+      return GLib.SOURCE_REMOVE;
+    });
+
     this.listenToDeviceChanges();
   }
 
@@ -84,7 +89,7 @@ class BluetoothExtension {
           let [objects] = connection.call_finish(result).deep_unpack();
           let found = false;
 
-          for (let interfaces of Object.entries(objects)) {
+          for (let [objectPath, interfaces] of Object.entries(objects)) {
             let device = interfaces["org.bluez.Device1"];
             if (device) {
               let name = device.Name?.deep_unpack?.() || "Unknown Device";
