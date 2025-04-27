@@ -26,6 +26,12 @@ class BluetoothExtension {
     this.label1 = new St.Label({
       text: " Not Connected ",
       y_align: Clutter.ActorAlign.CENTER,
+      reactive: true,
+      track_hover: true,
+    });
+
+    this.label1.connect("button-press-event", () => {
+      GLib.spawn_command_line_async("gnome-control-center bluetooth");
     });
 
     container.add_child(icon);
@@ -64,9 +70,9 @@ class BluetoothExtension {
     let bus = Gio.DBus.system;
 
     bus.call(
-      "org.bluez", // Name of the service
-      "/", // Object path
-      "org.freedesktop.DBus.ObjectManager", // Interface
+      "org.bluez",
+      "/",
+      "org.freedesktop.DBus.ObjectManager",
       "GetManagedObjects",
       null,
       null,
@@ -78,7 +84,7 @@ class BluetoothExtension {
           let [objects] = connection.call_finish(result).deep_unpack();
           let found = false;
 
-          for (let [objectPath, interfaces] of Object.entries(objects)) {
+          for (let interfaces of Object.entries(objects)) {
             let device = interfaces["org.bluez.Device1"];
             if (device) {
               let name = device.Name?.deep_unpack?.() || "Unknown Device";
@@ -120,15 +126,15 @@ class BluetoothExtension {
 
             // Fetch the device name asynchronously when connected/disconnected
             Gio.DBus.system.call(
-              "org.bluez", // Name of the service
-              objectPath, // Object path of the device
-              "org.freedesktop.DBus.Properties", // Interface
+              "org.bluez",
+              objectPath,
+              "org.freedesktop.DBus.Properties",
               "Get",
-              GLib.Variant.new("(ss)", ["org.bluez.Device1", "Name"]), // Parameters (interface, property)
-              GLib.VariantType.new("(v)"), // Expected return type
+              GLib.Variant.new("(ss)", ["org.bluez.Device1", "Name"]),
+              GLib.VariantType.new("(v)"),
               Gio.DBusCallFlags.NONE,
-              -1, // Timeout
-              null, // Cancellable
+              -1,
+              null,
               (conn, res) => {
                 try {
                   let [result] = conn.call_finish(res).deep_unpack();
