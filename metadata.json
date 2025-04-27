@@ -1,7 +1,7 @@
 {
   "uuid": "bl-device-label@MikkoV",
   "name": "Bluetooth device Label",
-  "website": "https://github.com/MikkoVasankari/bl-device-label",
+  "url": "https://github.com/MikkoVasankari/bl-device-label",
   "description": "Displays currently connected Bluetooth device on the top bar",
   "shell-version": ["45", "44", "43", "42"],
   "version": 1
